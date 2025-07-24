@@ -36,6 +36,7 @@ const Messenger = () => {
   const [newNick, setNewNick] = useState('');
   const [activeTab, setActiveTab] = useState('chats');
   const [unreadCounts, setUnreadCounts] = useState({});
+  const [showChatSettings, setShowChatSettings] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const avatarInputRef = useRef(null);
