@@ -410,8 +410,18 @@ const Messenger = () => {
 
   return (
     <div className="flex h-screen bg-gray-100 relative">
+      {/* Mobile overlay */}
+      {showSearch && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setShowSearch(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+      <div className={`w-full lg:w-80 bg-white border-r border-gray-200 flex flex-col ${
+        selectedChat ? 'hidden lg:flex' : 'flex'
+      } relative z-50`}>
         {/* Header */}
         <div className="p-4 border-b border-gray-200 bg-blue-600 text-white">
           <div className="flex items-center justify-between">
