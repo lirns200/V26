@@ -195,6 +195,26 @@ async def get_users(token: str, db: Session = Depends(get_db)):
     users = db.query(User).filter(User.id != token).all()
     return {"users": [{"id": u.id, "username": u.username, "avatar": u.avatar, "last_online": u.last_online} for u in users]}
 
+@api_router.get("/profile")
+async def get_profile(token: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == token).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    
+    return {
+        "user_id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "avatar": user.avatar,
+        "last_online": user.last_online,
+        "invisible_mode": user.invisible_mode,
+        "hide_last_seen": user.hide_last_seen,
+        "hide_profile_info": user.hide_profile_info,
+        "theme": user.theme,
+        "custom_primary_color": user.custom_primary_color,
+        "custom_secondary_color": user.custom_secondary_color
+    }
+
 @api_router.get("/messages/{user_id}")
 async def get_messages(user_id: str, token: str, db: Session = Depends(get_db)):
     messages = db.query(Message).filter(
@@ -236,7 +256,7 @@ async def get_favorites(token: str, db: Session = Depends(get_db)):
             "text": fav.text,
             "file_url": fav.file_url,
             "voice_url": fav.voice_url,
-            "timestamp": fav.timestamp
+            "timestamp": fav.timestamp.timestamp() if fav.timestamp else None
         }
         if fav.orig:
             try:
