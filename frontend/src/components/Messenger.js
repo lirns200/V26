@@ -661,7 +661,9 @@ const Messenger = () => {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
+      <div className={`flex-1 flex flex-col ${
+        selectedChat ? 'flex' : 'hidden lg:flex'
+      }`}>
         {selectedChat ? (
           <>
             {/* Chat Header */}
