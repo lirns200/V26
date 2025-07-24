@@ -867,8 +867,8 @@ const Messenger = () => {
             </div>
 
             {/* Message Input */}
-            <div className="p-4 border-t border-gray-200 bg-white">
-              <div className="flex items-center space-x-3">
+            <div className="p-3 sm:p-4 border-t border-gray-200 bg-white">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -877,13 +877,13 @@ const Messenger = () => {
                 />
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 transform hover:scale-110"
+                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 transform hover:scale-110 flex-shrink-0"
                   title="Прикрепить файл"
                 >
                   <PaperClipIcon className="w-5 h-5" />
                 </button>
 
-                <div className="flex-1">
+                <div className="flex-1 relative">
                   <input
                     type="text"
                     placeholder={selectedChat === 'Избранное' ? 'Добавить в избранное...' : 'Напишите сообщение...'}
@@ -898,18 +898,22 @@ const Messenger = () => {
                         }
                       }
                     }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm sm:text-base"
                   />
+                  {/* Emoji button */}
+                  <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                    <span className="text-lg">😊</span>
+                  </button>
                 </div>
 
-                <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 transform hover:scale-110">
+                <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 transform hover:scale-110 hidden sm:block">
                   <MicrophoneIcon className="w-5 h-5" />
                 </button>
 
                 <button
                   onClick={selectedChat === 'Избранное' ? addToFavorites : sendMessage}
                   disabled={!newMessage.trim()}
-                  className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-shrink-0"
                   title={selectedChat === 'Избранное' ? 'Добавить в избранное' : 'Отправить сообщение'}
                 >
                   {selectedChat === 'Избранное' ? (
