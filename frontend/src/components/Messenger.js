@@ -47,6 +47,7 @@ const Messenger = () => {
     readReceipts: true
   });
   const [activeSettingsTab, setActiveSettingsTab] = useState('profile');
+  const [searchFilter, setSearchFilter] = useState('users');
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const avatarInputRef = useRef(null);
