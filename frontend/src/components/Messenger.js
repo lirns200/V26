@@ -46,6 +46,7 @@ const Messenger = () => {
     hideStatus: false,
     readReceipts: true
   });
+  const [activeSettingsTab, setActiveSettingsTab] = useState('profile');
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const avatarInputRef = useRef(null);
