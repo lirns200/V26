@@ -83,6 +83,20 @@ const Messenger = () => {
     }
   }, [showSearch]);
 
+  // Закрытие выпадающих меню при клике снаружи
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showChatSettings) {
+        setShowChatSettings(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showChatSettings]);
+
   // Периодическое обновление непрочитанных сообщений
   useEffect(() => {
     const interval = setInterval(() => {
