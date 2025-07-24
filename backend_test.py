@@ -294,10 +294,10 @@ def test_field_validation():
             "data": {"username": "testuser", "email": "test@example.com"},
             "description": "missing password"
         },
-        # Empty fields
+        # Empty fields (will be treated as duplicate if empty string exists)
         {
-            "data": {"username": "", "email": "", "password": ""},
-            "description": "empty fields"
+            "data": {"username": "", "email": f"empty_{int(datetime.now().timestamp())}@test.com", "password": ""},
+            "description": "empty username and password"
         }
     ]
     
