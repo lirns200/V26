@@ -14,6 +14,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [token, setToken] = useState(null);
     
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const API = `${BACKEND_URL}/api`;
@@ -21,11 +22,16 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         // Check if user is logged in on app start
         const savedUser = localStorage.getItem('user');
-        if (savedUser) {
+        const savedToken = localStorage.getItem('token');
+        
+        if (savedUser && savedToken) {
             try {
-                setUser(JSON.parse(savedUser));
+                const userData = JSON.parse(savedUser);
+                setUser(userData);
+                setToken(savedToken);
             } catch (error) {
                 localStorage.removeItem('user');
+                localStorage.removeItem('token');
             }
         }
         setLoading(false);
@@ -39,8 +45,18 @@ export const AuthProvider = ({ children }) => {
             });
             
             const userData = response.data;
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
+            const userToken = userData.user_id; // Using user_id as token
+            
+            // Set nick as username for compatibility
+            const fullUserData = {
+                ...userData,
+                nick: userData.username
+            };
+            
+            setUser(fullUserData);
+            setToken(userToken);
+            localStorage.setItem('user', JSON.stringify(fullUserData));
+            localStorage.setItem('token', userToken);
             
             return { success: true };
         } catch (error) {
@@ -61,8 +77,18 @@ export const AuthProvider = ({ children }) => {
             });
             
             const userData = response.data;
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
+            const userToken = userData.user_id; // Using user_id as token
+            
+            // Set nick as username for compatibility
+            const fullUserData = {
+                ...userData,
+                nick: userData.username
+            };
+            
+            setUser(fullUserData);
+            setToken(userToken);
+            localStorage.setItem('user', JSON.stringify(fullUserData));
+            localStorage.setItem('token', userToken);
             
             return { success: true };
         } catch (error) {
@@ -74,17 +100,43 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const fetchUserProfile = async () => {
+        if (!token) return;
+        
+        try {
+            const response = await axios.get(`${API}/profile`, {
+                params: { token }
+            });
+            
+            const userData = response.data;
+            const fullUserData = {
+                ...userData,
+                nick: userData.username
+            };
+            
+            setUser(fullUserData);
+            localStorage.setItem('user', JSON.stringify(fullUserData));
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+        }
+    };
+
     const logout = () => {
         setUser(null);
+        setToken(null);
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
     };
 
     const value = {
         user,
+        token,
         login,
         register,
         logout,
-        loading
+        loading,
+        API,
+        fetchUserProfile
     };
 
     return (
