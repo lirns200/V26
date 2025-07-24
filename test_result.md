@@ -219,7 +219,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Authentication API endpoints"
     - "Beautiful registration form"
     - "Form validation and UX"
   stuck_tasks: []
