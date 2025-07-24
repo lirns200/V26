@@ -37,6 +37,15 @@ const Messenger = () => {
   const [activeTab, setActiveTab] = useState('chats');
   const [unreadCounts, setUnreadCounts] = useState({});
   const [showChatSettings, setShowChatSettings] = useState(false);
+  const [theme, setTheme] = useState('light');
+  const [fontSize, setFontSize] = useState('medium');
+  const [chatWallpaper, setChatWallpaper] = useState('default');
+  const [privacySettings, setPrivacySettings] = useState({
+    hideLastSeen: false,
+    hideProfilePhoto: false,
+    hideStatus: false,
+    readReceipts: true
+  });
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const avatarInputRef = useRef(null);
