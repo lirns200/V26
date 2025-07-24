@@ -480,55 +480,99 @@ const Messenger = () => {
           </div>
         </div>
 
-        {/* Search Section */}
+        {/* Enhanced Search Section */}
         {showSearch && (
           <div className="p-4 border-b border-gray-200 bg-gray-50 animate-slideDown">
-            <div className="relative">
-              <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Поиск по имени пользователя..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  searchUsers(e.target.value);
-                }}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
+            <div className="space-y-3">
+              <div className="relative">
+                <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Поиск пользователей, сообщений, файлов..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    searchUsers(e.target.value);
+                  }}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                />
+              </div>
+              
+              {/* Search Filters */}
+              <div className="flex space-x-2">
+                <button 
+                  onClick={() => setSearchFilter('users')}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                    searchFilter === 'users' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  👤 Пользователи
+                </button>
+                <button 
+                  onClick={() => setSearchFilter('messages')}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                    searchFilter === 'messages' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  💬 Сообщения
+                </button>
+                <button 
+                  onClick={() => setSearchFilter('files')}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                    searchFilter === 'files' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  📎 Файлы
+                </button>
+              </div>
             </div>
 
-            {/* Search Results */}
+            {/* Enhanced Search Results */}
             {searchResults.length > 0 && (
-              <div className="mt-3 space-y-2">
+              <div className="mt-3 space-y-2 max-h-64 overflow-y-auto">
                 {searchResults.map((result) => (
                   <div
                     key={result.id}
                     onClick={() => addUserToChats(result.id)}
-                    className="p-3 bg-white rounded-lg hover:bg-gray-100 cursor-pointer transition-all duration-200 transform hover:scale-105 border border-gray-200"
+                    className="p-3 bg-white rounded-lg hover:bg-gray-100 cursor-pointer transition-all duration-200 transform hover:scale-[1.02] border border-gray-200 shadow-sm"
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center overflow-hidden">
-                        {result.avatar ? (
-                          <img
-                            src={result.avatar}
-                            alt="Avatar"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <span className="text-white font-semibold text-sm">
-                            {getInitials(result.nick)}
-                          </span>
-                        )}
+                      <div className="relative">
+                        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center overflow-hidden">
+                          {result.avatar ? (
+                            <img
+                              src={result.avatar}
+                              alt="Avatar"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-white font-semibold text-sm">
+                              {getInitials(result.nick)}
+                            </span>
+                          )}
+                        </div>
+                        <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${
+                          result.online ? 'bg-green-400' : 'bg-gray-400'
+                        }`}></div>
                       </div>
                       <div className="flex-1">
                         <p className="font-medium text-gray-900">{result.nick}</p>
-                        <p className="text-xs text-gray-500 flex items-center">
-                          <span className={`w-2 h-2 rounded-full mr-2 ${result.online ? 'bg-green-400' : 'bg-gray-400'}`}></span>
-                          {result.online ? 'В сети' : 'Не в сети'}
-                        </p>
+                        <div className="flex items-center space-x-2 text-xs text-gray-500">
+                          <span className="flex items-center">
+                            {result.online ? '🟢 В сети' : '⚫ Не в сети'}
+                          </span>
+                          {!result.online && result.last_online && (
+                            <span>
+                              • {new Date(result.last_online * 1000).toLocaleDateString('ru-RU')}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <UserPlusIcon className="w-5 h-5 text-gray-400" />
+                      <div className="flex flex-col space-y-1">
+                        <UserPlusIcon className="w-5 h-5 text-blue-400" />
+                        <span className="text-xs text-gray-400">Добавить</span>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -536,9 +580,12 @@ const Messenger = () => {
             )}
 
             {searchQuery && searchResults.length === 0 && (
-              <div className="mt-3 p-3 text-center text-gray-500">
-                <UserCircleIcon className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-                <p className="text-sm">Пользователь не найден</p>
+              <div className="mt-3 p-6 text-center text-gray-500 bg-white rounded-lg">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <MagnifyingGlassIcon className="w-8 h-8 text-gray-300" />
+                </div>
+                <p className="font-medium mb-1">Ничего не найдено</p>
+                <p className="text-sm">Попробуйте изменить поисковый запрос</p>
               </div>
             )}
           </div>
